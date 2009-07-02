@@ -1,9 +1,5 @@
 ###############################
 # WORKFLOW
-# -Connect with gid
-# --create a new project, called 'ssh_gswi'
-# --push files up to it
-# -implement more games
 # --css
 # --dod
 # --dods
