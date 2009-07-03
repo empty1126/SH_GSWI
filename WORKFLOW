@@ -5,3 +5,6 @@
 # --dod
 # --dods
 # -implement games with mod installation into system
+# complete the help (german +english)
+# 2nd try out of push stderr to logfile (first failed !)
+# 
