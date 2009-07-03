@@ -25,10 +25,6 @@
 #                                                            #
  ############################################################
 
-
-GAME_PATH=/home/gameserver/
-ADMIN_EMAIL=Technik@Streamhousing.de
-
 source _functions.sh
 
 logger "Starting script, with version: '$VERS' as user: '`whoami`'." "DEBUGG"
@@ -59,12 +55,10 @@ case "$1" in
 
 			if [ "$WHAT_TO_DO" == "" ];then  
 				logger "No option has been given, restart the script." "WARN"
-				sh intdwad.sdh 2> "$LOG_DIR/logg_stderr"
-				std_err
+				sh interface.sh
 			elif [ "$WHAT_TO_DO" == 0 ];then 
 				logger "No option has been given, restart the script." "WARN"
-				sh interface.sh 2> "$LOG_DIR/logg_stderr"
-				std_err
+				sh interface.sh
 			elif [ "$WHAT_TO_DO" == "1" ];then
 				clear 
 				ausgabe "Sie wollen einen Gameserver installieren." gruen
@@ -76,12 +70,10 @@ case "$1" in
 				read GAME; 
 					if [ "$GAME" == "" ];then 
 						logger "No Game has been given, restart the script." "WARN"
-						sh interface.sh 2> "$LOG_DIR/logg_stderr"
-		                                std_err
+						sh interface.sh
 					elif [ "$GAME" == "0" ];then 
 						logger "No Game has been given, restart the script." "WARN" 
-						sh interface.sh 2> "$LOG_DIR/logg_stderr"
-		                                std_err
+						sh interface.sh  
 					elif [ "$GAME" == "1" ];then
 						ausgabe "Sie haben Counterstrike 1.6 ausgewaehlt" gruen
 						ausgabe "Port ? [default 27015]" blau
@@ -105,31 +97,28 @@ case "$1" in
 							ausgabe "Der gewaehlte Port: '$PORT' wird bereits genutzt." rot
  							exit
   						 fi
-	
+							
+						 logger "Starting Cs1.6 installation for Port: '$PORT'" "INFO" "START"
 					 	 ausgabe "Port: '$PORT' wird benutzt." gruen
-						 sh Packages/cs1_6.sh install $PORT $GAME_PATH 2> "$LOG_DIR/logg_stderr"
-		                                 std_err
+						 sh Packages/cs1_6.sh install $PORT $GAME_PATH
 							if [ "$?" != "0" ];then
 								logger "Es sind Fehler aufgetreten." "ERROR" 
 								ausgabe "Es sind Fehler aufgetreten." rot
 								exit
 							fi 								
 	
-						 sh Packages/cs1_6.sh build $PORT $GAME_PATH 2> "$LOG_DIR/logg_stderr"
-		                                 std_err
-
+						 sh Packages/cs1_6.sh build $PORT $GAME_PATH 
 
                                                         if [ "$?" != "0" ];then
                                                                 logger "Es sind Fehler aufgetreten." "ERROR"
 							        ausgabe "Es sind Fehler aufgetreten." rot
 				                                exit
 				                        fi
+						 logger "Cs1.6 installation for Port: '$PORT' completed" "INFO" "END"
 						 ausgabe "Die installation wurde erfolgreich abgeschlossen" gruen
 						 sleep 2
-						 sh interface.sh 2> "$LOG_DIR/logg_stderr"
-		                                 std_err
+						 sh interface.sh
  
-
 					elif [ "$GAME" == 2 ];then
 						ausgabe "CS:S ist noch nicht implementiert." "rot"
 						logger "CS:S is not implemented, yet, exiting..." "SYSTEM_ERROR"
@@ -147,8 +136,7 @@ case "$1" in
 			
 					if [ "$GAME" == "" ];then
 						logger "No Game has been given" "WARN"
-						sh interface.sh 2> "$LOG_DIR/logg_stderr"
-		                                std_err
+						sh interface.sh
 					elif [ "$GAME" == 1 ];then
 						ausgabe "Gameserver-Port, welcher deinstalliert werden soll ?" blau
 						read PORT
@@ -156,18 +144,15 @@ case "$1" in
 							if [ "$PORT" == "" ];then 
                                                                 logger "Es wurde kein Port angegeben." "WARN"  
 								ausgabe "Kein Port angegeben." rot
-								sh interface.sh 2> "$LOG_DIR/logg_stderr"
-					                        std_err
+								sh interface.sh 
  							else
 								ausgabe "Sie haben '$PORT' gewaehlt." gruen
 								if [ -f "$GAME_PATH/$PORT/hlds_run" ];then
-									sh Packages/cs1_6.sh deinstall $PORT $GAME_PATH 2> "$LOG_DIR/logg_stderr"
-						                        std_err
+									sh Packages/cs1_6.sh deinstall $PORT $GAME_PATH
  								else
 									logger "Der Gameserver mit dem Port '$PORT' existiert nicht." "WARN"
 									ausgabe "Der Gameserver unter Port: '$PORT' existiert nicht." rot
-									sh interface.sh 2> "$LOG_DIR/logg_stderr"
-						                        std_err
+									sh interface.sh 
 								fi
 							fi			
 					elif [ "$GAME" == 2 ];then
@@ -182,9 +167,8 @@ case "$1" in
 				read PORT
 					if [ "$PORT" == "" ];then
 						logger "Es wurde kein Port angegeben, starte das Script neu." "WARN"
-						sh interface.sh 2> "$LOG_DIR/logg_stderr"
-		                                std_err
-					else
+						sh interface.sh
+		                    	else
 						ausgabe "Welches Spiel laeuft unter Port: '$PORT' ?" blau
 						ausgabe "1) Counterstrike 1.6" gruen
 						ausgabe "2) Counsterstrike: Source" gruen
@@ -192,12 +176,10 @@ case "$1" in
 						read EXCUTABLE
 							if [ "$EXCUTABLE" == "" ];then
 								logger "No excutable has been given, restart the script." "WARN"
-								sh interface.sh 2> "$LOG_DIR/logg_stderr"
-				                                std_err
+								sh interface.sh
 							elif [ "$EXCUTABLE" == 1 ];then
 								EXCUT=hlds_run
-								sh Packages/cs1_6.sh start $PORT $GAME_PATH 2> "$LOG_DIR/logg_stderr"
-				                                std_err
+								sh Packages/cs1_6.sh start $PORT $GAME_PATH
 							elif [ "$EXCUTABLE" == 2 ];then
 								EXCUT=srcds_run
 								ausgabe "CS:S start wurde noch nicht implementiert !" rot
@@ -206,8 +188,7 @@ case "$1" in
 								logger "No Gameserver exists under port: '$PORT', sleep 2, and restart the script." "WARN"
 								ausgabe "Es konnte kein Gameserver unter Port: '$PORT' gefunden werden." rot
 								sleep 2
-								sh interface.sh 2> "$LOG_DIR/logg_stderr"
-				                                std_err
+								sh interface.sh
 							fi
 					fi		
 			
@@ -218,8 +199,7 @@ case "$1" in
 				read PORT
 					if [ "$PORT" == "" ];then
 						logger "No port has been given" "WARN"
-						sh interface.sh 2> "$LOG_DIR/logg_stderr"
-		                                std_err
+						sh interface.sh
 					else
 						ausgabe "Welches Spiel laueft unter Port: '$PORT' ?" blau
 						ausgabe "1) Counterstrike 1.6" gruen
@@ -228,12 +208,10 @@ case "$1" in
 						read EXCUTABLE
 					        if [ "$EXCUTABLE" == "" ];then
 							logger "No excutable has been given" "WARN"
-						        sh interface.sh 2> "$LOG_DIR/logg_stderr"
-			                                std_err
+						        sh interface.sh 
 						elif [ "$EXCUTABLE" == 1 ];then
 						        EXCUT=hlds_run
-						        sh Packages/cs1_6.sh stop $PORT $GAME_PATH 2> "$LOG_DIR/logg_stderr"
-			                                std_err
+						        sh Packages/cs1_6.sh stop $PORT $GAME_PATH
  						elif [ "$EXCUTABLE" == 2 ];then
 							EXCUT=srcds_run
 							ausgabe "CS:S Stop is not implemented yet, exiting.." rot
@@ -242,8 +220,7 @@ case "$1" in
 							logger "No Gameserver founded under port: '$PORT', sleep 2, and restart the script." "WARN"
 							ausgabe "Es konnte kein Gameserver unter Port: '$PORT' gefunden werden." rot
 							sleep 2
-							sh interface.sh 2> "$LOG_DIR/logg_stderr"
-			                                std_err
+							sh interface.sh 
 						fi
 					fi
                         elif [ "$WHAT_TO_DO" == 5 ];then
@@ -253,9 +230,8 @@ case "$1" in
                                 read PORT
                                         if [ "$PORT" == "" ];then
                                                 logger "ES wurde kein Port angegeben." "WARN"
-                                                sh interface.sh 2> "$LOG_DIR/logg_stderr"
-		                                std_err
-                                        else
+                                                sh interface.sh 
+					else
                                                 ausgabe "Welches Spiel laueft unter Port: '$PORT' ?" blau
                                                 ausgabe "1) Counterstrike 1.6" gruen
                                                 ausgabe "2) Counsterstrike: Source" gruen
@@ -263,29 +239,25 @@ case "$1" in
                                                 read EXCUTABLE
                                                 if [ "$EXCUTABLE" == "" ];then
 							logger "No excutable has been given, restart the script." "WARN"
-                                                        sh interface.sh 2> "$LOG_DIR/logg_stderr"
-			                                std_err
+                                                        sh interface.sh
                                                 elif [ "$EXCUTABLE" == 1 ];then
                                                         EXCUT=hlds_run
-                                                        sh Packages/cs1_6.sh restart $PORT $GAME_PATH 2> "$LOG_DIR/logg_stderr"
-			                                std_err
+                                                        sh Packages/cs1_6.sh restart $PORT $GAME_PATH
 	                                        elif [ "$EXCUTABLE" == 2 ];then
                                                         EXCUT=srcds_run
 							logger "Counterstrike source restart ist noch nicht implementiert, abbruch..." "ERROR"
                                                         ausgabe "CS:S Restart is not implemented yet, exiting.." rot
                                                         exit
                                                 else
-							logger "Es konnte kein Gamserver unter diesem Port '$PORT' gefunden werden." "WARN"
+							logger "Es konnte kein Gamserver unter Port '$PORT' gefunden werden." "WARN"
                                                         ausgabe "Es konnte kein Gameserver unter Port: '$PORT' gefunden werden." rot
                                                         sleep 2
-                                                        sh interface.sh 2> "$LOG_DIR/logg_stderr"
-			                                std_err
+                                                        sh interface.sh
                                                  fi
                                         fi
                         elif [ "$WHAT_TO_DO" == 6 ];then
 				if [ -f "Packages/Mods/install.sh" ];then
-					sh Packages/Mods/install.sh 2> "$LOG_DIR/logg_stderr"
-	                                std_err
+					sh Packages/Mods/install.sh 
 				else
 					logger "Couldn't open Packages/Mods/install.sh" "SYSTEM_ERROR"
 				fi 
@@ -295,19 +267,19 @@ case "$1" in
 					if [ "$REALLY" == "" ];then
 						logger "No options, restart the script." "WARN"
 						sleep 2
-						sh interface.sh 2> "$LOG_DIR/logg_stderr"
-		                                std_err
+						sh interface.sh
 					elif [ "$REALLY" == "n" ] || [ "$REALLY" == "N" ];then
 						sleep 2
-						sh interface.sh 2> "$LOG_DIR/logg_stderr"
-		                                std_err
+						sh interface.sh
  					elif [ "$REALLY" == "J" ] || [ "$REALLY" == "j" ];then
-						logger "" "LOG_CLEAR"
+						logger "Received LOG_CLEAR in interface.sh at line 275" "LOG_CLEAR"
+						logger "Logfiles wurden geloescht." "WARN"
+						ausgabe "Log files wurden geloescht." gruen
 						sleep 2
-						ausgabe "Log files wurden geloescht".
-						logger "Logfiles wurden geloescht" "WARN"
-						sh interface.sh 2> "$LOG_DIR/logg_stderr"
-		                                std_err
+						sh interface.sh
+					else 
+						logger "Bad information: '$REALLY'" "WARN"
+						sh interface.sh
 					fi
 			elif [ "$WHAT_TO_DO" == 8 ]; then
 				help;
