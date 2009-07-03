@@ -1,2 +1,34 @@
+First up, is the english version.
+Deutsch weiter unten.
 
-dokumentation pls pls
+ENGLISH:
+This gameserver interface based on SH/BASH can:
+	-start a gameserver
+	-stop a gameserver
+	-restart a gameserver
+	-install a gameserver
+	-remove a gameserver
+	-install modifcations such as MetaMod, amx and so on...
+This gameserver interface have an own logger class, which logs all shit on an additional file.
+It also redirect "STDERR" to the logfile.
+By default, the logfiles are located in /var/log/gswi, but it also can be change in _functions.sh at the logger function.
+All logfiles, are cognizable at their date of the day, for example: Jul-02-09.log.
+
+The interface also got in _functions.sh a variable to dis/enable the debugg mode.
+If the debugg-mode is set to true, you will got all shit, in the logs.
+
+DEUTSCH:
+Dieses Gameserver-Interface basierend auf SH/BASH kann:
+	-einen Gameserver starten
+	-einen Gameserver stoppen
+	-einen Gameserver neustarten
+	-einen Gameserver installieren
+	-einen Gameserver deinstallieren
+	-Modifikationen installieren, wie z.B. MetaMod, Amx etc.
+Dieses Gameserver-Interface hat eine eigene Logg-Klasse, welche alles in eine extra Datei loggt.
+Es leitet "STDERR" ebenfalls in die Logdatei.
+Standardmaessig, liegen die Logdateien in /var/log/gswi/, diess kann allerdings, bei Bedarf, in _functions.sh in der Logger-Funktion geaendert werden.
+Alle Logdatein werden mit dem aktuellem Datum gespeichert, beispielsweise: Jul-02-09.log.
+
+Das Interface hat ausserdem, eine Varibale DEBUGG, in _functions.sh. Mit dieser koennen Sie den 'Debugg-Modus' ein- bzw ausschalten.
+Sobald der Debugg-Modus eingeschlatet ist, wird alles moegliche in die Loggdatei geschrieben.
